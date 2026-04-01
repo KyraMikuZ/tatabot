@@ -1,30 +1,32 @@
 import fs from 'fs'
 
+const path = './media/produk.json'
+
 export const run = {
    usage: ['form'],
    category: 'store',
    async: async (m, {
       client,
-      isPrefix,
-      command,
       setting,
       Utils
    }) => {
       try {
-         // Teks formulir yang akan di-copy
-         const formText = `📋 *FORM ORDER*
+         if (!fs.existsSync(path)) {
+            return m.reply('Database tidak ditemukan!')
+         }
 
-Tanggal Order: ${new Date().toLocaleDateString('id-ID')}
-Nama / Username: 
-Nama APK: 
-Jenis Plan: 
-Durasi: 
-Device (merek & lokasi): 
-Nomor WA / Email: 
-Resell / Pribadi: 
-Done Subc : @yanamiku.shop`
+         let db = JSON.parse(fs.readFileSync(path))
 
-         // Button copy menggunakan cta_copy
+         if (!db.form || !db.form.text) {
+            return m.reply('Form belum diset! Gunakan command setform')
+         }
+
+         // inject tanggal otomatis
+         let formText = db.form.text.replace(
+            /{tanggal}/gi,
+            new Date().toLocaleDateString('id-ID')
+         )
+
          const buttons = [{
             name: 'cta_copy',
             buttonParamsJson: JSON.stringify({
@@ -33,13 +35,14 @@ Done Subc : @yanamiku.shop`
             })
          }]
 
-         // Kirim pesan dengan button copy
          client.sendIAMessage(m.chat, buttons, m, {
             header: '📝 *FORMULIR ORDER*',
-            content: `Halo @${m.sender.replace(/@.+/g, '')},\n\nSilakan klik tombol di bawah untuk menyalin formulir order.\n\nSetelah menyalin, isi formulir tersebut dan kirimkan kembali ke sini.\n\n${formText}`,
+            content: `Halo @${m.sender.replace(/@.+/g, '')}\n\nSilakan copy form di bawah:\n\n${formText}`,
             v2: true,
             footer: global.footer || '© WhatsApp Bot',
-            media: Utils.isUrl(setting.cover) ? setting.cover : Buffer.from(setting.cover, 'base64')
+            media: Utils.isUrl(setting.cover)
+               ? setting.cover
+               : Buffer.from(setting.cover, 'base64')
          })
 
       } catch (e) {
