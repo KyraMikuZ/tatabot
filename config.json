@@ -19,7 +19,7 @@
    "evaluate_chars":  ["=>", "~>", "<", ">", "$"],
    "pairing": {
       "state": true,
-      "number": 6283896835921,
+      "number": 6282113730047,
       "browser": ["Mac OS", "Chrome", "139.0.7258.164"],
       "version": [2, 3000, 1036181364],
       "code": "YANAMIKU"
