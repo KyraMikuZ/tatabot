@@ -1,0 +1,8 @@
+{
+  "form": {
+    "text": "📋 *FORM ORDER*\n\nNama:\nProduk:\nDurasi:\nNomor:\nCatatan:"
+  },
+  "netflix": {
+    "message": "Hello World!"
+  }
+}
